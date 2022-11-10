@@ -1,21 +1,22 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
+import * as express from 'express'
+import * as path from 'path'
+import { promises, createReadStream } from 'fs'
 
-import * as express from 'express';
-import * as path from 'path';
+const app = express()
 
-const app = express();
+const PORT = 3000
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.get('/video', async (req, res) => {
+    const videoPath = path.join(__dirname, './videos/SampleVideo_1280x720_1mb.mp4')
+    const stats = await promises.stat(videoPath)
 
-app.get('/api', (req, res) => {
-  res.send({ message: 'Welcome to video-streaming!' });
-});
+    res.writeHead(200, {
+        'Content-Length': stats.size,
+        'Content-Type': 'video/mp4'
+    })
+    createReadStream(videoPath).pipe(res)
+})
 
-const port = process.env.port || 3333;
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`);
-});
-server.on('error', console.error);
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`)
+})
