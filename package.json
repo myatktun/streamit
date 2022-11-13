@@ -6,10 +6,13 @@
         "start": "nx serve",
         "build": "nx build",
         "test": "nx test",
-        "deploy": "nx deploy"
+        "deploy": "nx deploy",
+        "compose:up": "nx up",
+        "compose:down": "docker compose down -v"
     },
     "private": true,
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.208.0",
         "express": "^4.18.1",
         "tslib": "^2.3.0"
     },
