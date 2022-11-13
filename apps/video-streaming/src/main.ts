@@ -1,20 +1,28 @@
-import * as express from 'express'
-import * as path from 'path'
-import { promises, createReadStream } from 'fs'
+import express from 'express'
+import { request } from 'http'
 
+if (!process.env.PORT) {
+    throw new Error("Environment variable PORT not specified")
+}
 const app = express()
 
-const PORT = 3000
+const PORT = process.env.PORT
 
-app.get('/video', async (req, res) => {
-    const videoPath = path.join(__dirname, './videos/SampleVideo_1280x720_1mb.mp4')
-    const stats = await promises.stat(videoPath)
-
-    res.writeHead(200, {
-        'Content-Length': stats.size,
-        'Content-Type': 'video/mp4'
-    })
-    createReadStream(videoPath).pipe(res)
+app.get('/video', (req, res) => {
+    const forwardRequest = request(
+        {
+            host: 'localhost',
+            port: 4001,
+            path: '/video?path=SampleVideo_1280x720_1mb.mp4',
+            method: 'GET',
+            headers: req.headers
+        },
+        forwardResponse => {
+            res.writeHead(<number>forwardResponse.statusCode, forwardResponse.headers)
+            forwardResponse.pipe(res)
+        }
+    )
+    req.pipe(forwardRequest)
 })
 
 app.listen(PORT, () => {

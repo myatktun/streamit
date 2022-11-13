@@ -46,6 +46,15 @@
                 }
             }
         },
+        "up": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "docker compose up video-streaming --build -d"
+                ],
+                "parallel": false
+            }
+        },
         "serve": {
             "executor": "@nrwl/js:node",
             "options": {
