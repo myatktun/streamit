@@ -1,11 +1,18 @@
 version: '3.8'
 services:
+  db:
+    image: mongo:6.0.2
+    container_name: db
+    ports:
+      - "4002:27017"
+    restart: always
+
   aws-storage:
     image: aws-storage
     build:
       context: .
       dockerfile: ./apps/aws-storage/Dockerfile
-    container_name: aws-storage
+    container_name: video-storage
     ports:
       - "4001:80"
     env_file:
