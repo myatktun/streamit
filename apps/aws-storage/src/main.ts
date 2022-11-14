@@ -27,7 +27,7 @@ const getObject = async (params: GetObjectCommandInput) => {
         const object = await s3Client.send(command)
         return object
     } catch (error) {
-        console.log(error)
+        console.log("Error", error)
         return new Error(<string>error)
     }
 }

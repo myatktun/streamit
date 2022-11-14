@@ -1,60 +1,101 @@
 {
-  "name": "aws-storage",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/aws-storage/src",
-  "projectType": "application",
-  "targets": {
-    "build": {
-      "executor": "@nrwl/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "target": "node",
-        "compiler": "tsc",
-        "outputPath": "dist/apps/aws-storage",
-        "main": "apps/aws-storage/src/main.ts",
-        "tsConfig": "apps/aws-storage/tsconfig.app.json",
-        "assets": ["apps/aws-storage/src/assets"]
-      },
-      "configurations": {
-        "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/aws-storage/src/environments/environment.ts",
-              "with": "apps/aws-storage/src/environments/environment.prod.ts"
+    "name": "aws-storage",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/aws-storage/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/webpack:webpack",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "target": "node",
+                "compiler": "tsc",
+                "outputPath": "dist/apps/aws-storage",
+                "main": "apps/aws-storage/src/main.ts",
+                "tsConfig": "apps/aws-storage/tsconfig.app.json",
+                "assets": [
+                    "apps/aws-storage/src/assets"
+                ],
+                "generatePackageJson": true
+            },
+            "configurations": {
+                "production": {
+                    "optimization": true,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/aws-storage/src/environments/environment.ts",
+                            "with": "apps/aws-storage/src/environments/environment.prod.ts"
+                        }
+                    ]
+                }
             }
-          ]
+        },
+        "deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "nx build aws-storage",
+                    "docker build -f ./apps/aws-storage/Dockerfile . -t $ECR_TAG:latest",
+                    "docker push $ECR_TAG:latest"
+                ],
+                "parallel": false
+            }
+        },
+        "compose:up": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "nx build aws-storage",
+                    "docker compose up aws-storage --build -d"
+                ],
+                "parallel": false
+            }
+        },
+        "compose:rm": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "docker compose rm -sfv aws-storage"
+                ],
+                "parallel": false
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/js:node",
+            "options": {
+                "buildTarget": "aws-storage:build"
+            },
+            "configurations": {
+                "production": {
+                    "buildTarget": "aws-storage:build:production"
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
+            "options": {
+                "lintFilePatterns": [
+                    "apps/aws-storage/**/*.ts"
+                ]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": [
+                "{workspaceRoot}/coverage/{projectRoot}"
+            ],
+            "options": {
+                "jestConfig": "apps/aws-storage/jest.config.ts",
+                "passWithNoTests": true
+            }
         }
-      }
     },
-    "serve": {
-      "executor": "@nrwl/js:node",
-      "options": {
-        "buildTarget": "aws-storage:build"
-      },
-      "configurations": {
-        "production": {
-          "buildTarget": "aws-storage:build:production"
-        }
-      }
-    },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/aws-storage/**/*.ts"]
-      }
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/aws-storage/jest.config.ts",
-        "passWithNoTests": true
-      }
-    }
-  },
-  "tags": []
+    "tags": []
 }
