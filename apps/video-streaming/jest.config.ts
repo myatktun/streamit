@@ -1,16 +1,17 @@
 /* eslint-disable */
 export default {
-  displayName: 'video-streaming',
-  preset: '../../jest.preset.js',
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
+    displayName: 'video-streaming',
+    preset: '../../jest.preset.js',
+    globals: {
+        'ts-jest': {
+            tsconfig: '<rootDir>/tsconfig.spec.json',
+        },
     },
-  },
-  testEnvironment: 'node',
-  transform: {
-    '^.+\\.[tj]s$': 'ts-jest',
-  },
-  moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/video-streaming',
+    testEnvironment: 'node',
+    transform: {
+        '^.+\\.[tj]s$': 'ts-jest',
+    },
+    moduleFileExtensions: ['ts', 'js', 'html'],
+    coverageDirectory: '../../coverage/apps/video-streaming',
+    verbose: true
 };
