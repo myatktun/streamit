@@ -8,6 +8,4 @@ RUN yarn install --prod
 
 COPY ./dist/apps/video-streaming .
 
-COPY ./videos ./videos
-
 CMD node ./main.js

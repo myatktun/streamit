@@ -4,18 +4,6 @@
     "sourceRoot": "apps/video-streaming/src",
     "projectType": "application",
     "targets": {
-        "deploy": {
-            "executor": "nx:run-commands",
-            "options": {
-                "commands": [
-                    "nx build video-streaming",
-                    "docker build -f ./apps/video-streaming/Dockerfile . -t video-streaming",
-                    "docker tag video-streaming:latest $ECR_TAG:latest",
-                    "docker push $ECR_TAG:latest"
-                ],
-                "parallel": false
-            }
-        },
         "build": {
             "executor": "@nrwl/webpack:webpack",
             "outputs": [
@@ -46,11 +34,32 @@
                 }
             }
         },
-        "up": {
+        "deploy": {
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
+                    "nx build video-streaming",
+                    "docker build -f ./apps/video-streaming/Dockerfile . -t $ECR_TAG:latest",
+                    "docker push $ECR_TAG:latest"
+                ],
+                "parallel": false
+            }
+        },
+        "compose:up": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "nx build video-streaming",
                     "docker compose up video-streaming --build -d"
+                ],
+                "parallel": false
+            }
+        },
+        "compose:rm": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "docker compose rm -sfv video-streaming"
                 ],
                 "parallel": false
             }

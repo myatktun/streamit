@@ -7,12 +7,14 @@ if (!process.env.PORT) {
 const app = express()
 
 const PORT = process.env.PORT
+const VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST
+const VIDEO_STORAGE_PORT = process.env.VIDEO_STORAGE_PORT
 
 app.get('/video', (req, res) => {
     const forwardRequest = request(
         {
-            host: 'localhost',
-            port: 4001,
+            host: VIDEO_STORAGE_HOST,
+            port: VIDEO_STORAGE_PORT,
             path: '/video?path=SampleVideo_1280x720_1mb.mp4',
             method: 'GET',
             headers: req.headers
