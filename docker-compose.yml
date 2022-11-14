@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  aws-storage:
+    image: aws-storage
+    build:
+      context: .
+      dockerfile: ./apps/aws-storage/Dockerfile
+    container_name: aws-storage
+    ports:
+      - "4001:80"
+    env_file:
+      - ./apps/aws-storage/.env.docker
+    restart: "no"
+
+  video-streaming:
+    image: video-streaming:latest
+    build:
+      context: .
+      dockerfile: ./apps/video-streaming/Dockerfile
+    container_name: video-streaming
+    ports:
+      - "4000:80"
+    env_file:
+      - ./apps/video-streaming/.env.docker
+    restart: "no"

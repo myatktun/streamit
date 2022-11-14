@@ -7,8 +7,12 @@
         "build": "nx build",
         "test": "nx test",
         "deploy": "nx deploy",
-        "compose:up": "nx up",
-        "compose:down": "docker compose down -v"
+        "deploy:all": "nx run-many --target=deploy --projects=video-streaming,aws-storage",
+        "compose:up": "nx compose:up",
+        "compose:upall": "nx run-many --target=compose:up --projects=video-streaming,aws-storage",
+        "compose:rm": "nx compose:rm",
+        "compose:rmall": "nx run-many --target=compose:rm --projects=video-streaming,aws-storage",
+        "compose:down": "docker compose down -v --rmi all"
     },
     "private": true,
     "dependencies": {
