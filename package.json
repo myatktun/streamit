@@ -14,7 +14,7 @@
         "compose:upall": "nx run-many --all --target=compose:up && docker compose up db -d",
         "compose:rm": "nx compose:rm",
         "compose:rmall": "nx run-many --all --target=compose:rm && docker compose rm -sfv db",
-        "compose:down": "docker compose down -v --rmi local"
+        "compose:down": "docker compose down -v && docker image prune -f"
     },
     "private": true,
     "dependencies": {

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   db:
-    image: mongo:6.0.2
+    image: bitnami/mongodb:latest
     container_name: db
     ports:
       - "4002:27017"
@@ -11,8 +11,11 @@ services:
     image: aws-storage
     build:
       context: .
-      dockerfile: ./apps/aws-storage/Dockerfile
+      dockerfile: ./apps/aws-storage/Dockerfile.dev
     container_name: video-storage
+    volumes:
+      - /tmp/history/npm-cache:/root/.npm:z
+      - ./apps/aws-storage:/usr/src/app/aws-storage:z
     ports:
       - "4001:80"
     env_file:
@@ -23,8 +26,11 @@ services:
     image: video-streaming:latest
     build:
       context: .
-      dockerfile: ./apps/video-streaming/Dockerfile
+      dockerfile: ./apps/video-streaming/Dockerfile.dev
     container_name: video-streaming
+    volumes:
+      - /tmp/history/npm-cache:/root/.npm:z
+      - ./apps/video-streaming:/usr/src/app/video-streaming:z
     ports:
       - "4000:80"
     env_file:
