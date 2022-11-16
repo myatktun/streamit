@@ -1,6 +1,10 @@
-import express from 'express'
-import { S3Client, GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3'
-import { Readable } from 'stream'
+import express from "express"
+import {
+    S3Client,
+    GetObjectCommand,
+    GetObjectCommandInput,
+} from "@aws-sdk/client-s3"
+import { Readable } from "stream"
 
 if (!process.env.S3_REGION) {
     throw new Error("Environment variable S3_REGION not set")
@@ -29,17 +33,19 @@ const getObject = async (params: GetObjectCommandInput) => {
 }
 
 app.get("/video", async (req, res) => {
-    if (typeof req.query.path !== 'string') {
+    if (typeof req.query.path !== "string") {
         res.status(404).send("Error")
         return
     }
 
     const videoPath = req.query.path
-    console.log(`Streaming video from path ${videoPath}, requested by ${req.headers.host}`)
+    console.log(
+        `Streaming video from path ${videoPath}, requested by ${req.headers.host}`
+    )
 
     const params: GetObjectCommandInput = {
         Bucket: S3_BUCKET,
-        Key: videoPath
+        Key: videoPath,
     }
 
     const object = await getObject(params)

@@ -1,4 +1,4 @@
-import app from './app/app'
+import app from "./app/app"
 
 if (!process.env.PORT) {
     throw new Error("Environment variable PORT not set")
