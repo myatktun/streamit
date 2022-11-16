@@ -24,6 +24,8 @@
         "tslib": "^2.3.0"
     },
     "devDependencies": {
+        "@commitlint/cli": "^17.2.0",
+        "@commitlint/config-conventional": "^17.2.0",
         "@nrwl/cli": "15.0.13",
         "@nrwl/eslint-plugin-nx": "15.0.13",
         "@nrwl/express": "15.0.13",
