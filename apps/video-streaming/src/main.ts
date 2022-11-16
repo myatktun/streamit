@@ -1,4 +1,4 @@
-import app from './app/app'
+import app from "./app/app"
 
 if (!process.env.PORT) {
     throw new Error("Environment variable PORT not specified")
@@ -12,7 +12,7 @@ const main = async () => {
     })
 }
 
-main().catch(err => {
+main().catch((err) => {
     console.error("Microservice failed to start")
-    console.error(err && err.stack || err)
+    console.error((err && err.stack) || err)
 })

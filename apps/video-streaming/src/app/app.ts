@@ -1,6 +1,6 @@
 import express from "express"
-import { request } from 'http'
-import { MongoClient, ObjectId } from 'mongodb'
+import { request } from "http"
+import { MongoClient, ObjectId } from "mongodb"
 
 const app = express()
 
@@ -25,7 +25,9 @@ const VIDEO_STORAGE_PORT = process.env.VIDEO_STORAGE_PORT
 const DBHOST = process.env.DBHOST
 const DBNAME = process.env.DBNAME
 
-console.log(`Forwarding requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}`)
+console.log(
+    `Forwarding requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}`
+)
 
 app.use(express.json())
 
@@ -35,9 +37,8 @@ const connectDB = async () => {
     return db.collection("videos")
 }
 
-app.get('/video', async (req, res) => {
-
-    if (typeof req.query.id !== 'string') {
+app.get("/video", async (req, res) => {
+    if (typeof req.query.id !== "string") {
         res.status(404).send("Error, wrong id")
         return
     }
@@ -57,11 +58,14 @@ app.get('/video', async (req, res) => {
             host: VIDEO_STORAGE_HOST,
             port: VIDEO_STORAGE_PORT,
             path: `/video?path=${videoRecord.videoPath}`,
-            method: 'GET',
-            headers: req.headers
+            method: "GET",
+            headers: req.headers,
         },
-        forwardResponse => {
-            res.writeHead(<number>forwardResponse.statusCode, forwardResponse.headers)
+        (forwardResponse) => {
+            res.writeHead(
+                <number>forwardResponse.statusCode,
+                forwardResponse.headers
+            )
             forwardResponse.pipe(res)
         }
     )

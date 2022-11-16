@@ -6,18 +6,14 @@
     "targets": {
         "build": {
             "executor": "@nrwl/webpack:webpack",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "options": {
                 "target": "node",
                 "compiler": "tsc",
                 "outputPath": "dist/apps/video-streaming",
                 "main": "apps/video-streaming/src/main.ts",
                 "tsConfig": "apps/video-streaming/tsconfig.app.json",
-                "assets": [
-                    "apps/video-streaming/src/assets"
-                ],
+                "assets": ["apps/video-streaming/src/assets"],
                 "generatePackageJson": true
             },
             "configurations": {
@@ -49,7 +45,7 @@
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
-                    "nx build video-streaming",
+                    "nx build video-streaming --configuration=production",
                     "docker compose up video-streaming --build -d"
                 ],
                 "parallel": false
@@ -58,9 +54,7 @@
         "compose:rm": {
             "executor": "nx:run-commands",
             "options": {
-                "commands": [
-                    "docker compose rm -sfv video-streaming"
-                ],
+                "commands": ["docker compose rm -sfv video-streaming"],
                 "parallel": false
             }
         },
@@ -77,20 +71,14 @@
         },
         "lint": {
             "executor": "@nrwl/linter:eslint",
-            "outputs": [
-                "{options.outputFile}"
-            ],
+            "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": [
-                    "apps/video-streaming/**/*.ts"
-                ]
+                "lintFilePatterns": ["apps/video-streaming/**/*.ts"]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": [
-                "{workspaceRoot}/coverage/{projectRoot}"
-            ],
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
                 "jestConfig": "apps/video-streaming/jest.config.ts",
                 "passWithNoTests": true
