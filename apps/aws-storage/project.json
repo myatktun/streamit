@@ -41,23 +41,6 @@
                 "parallel": false
             }
         },
-        "compose:up": {
-            "executor": "nx:run-commands",
-            "options": {
-                "commands": [
-                    "nx build aws-storage --configuration=production",
-                    "docker compose up aws-storage --build -d"
-                ],
-                "parallel": false
-            }
-        },
-        "compose:rm": {
-            "executor": "nx:run-commands",
-            "options": {
-                "commands": ["docker compose rm -sfv aws-storage"],
-                "parallel": false
-            }
-        },
         "serve": {
             "executor": "@nrwl/js:node",
             "options": {
