@@ -1,0 +1,72 @@
+{
+    "name": "view-history",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/view-history/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/webpack:webpack",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "target": "node",
+                "compiler": "tsc",
+                "outputPath": "dist/apps/view-history",
+                "main": "apps/view-history/src/main.ts",
+                "tsConfig": "apps/view-history/tsconfig.app.json",
+                "assets": ["apps/view-history/src/assets"],
+                "generatePackageJson": true
+            },
+            "configurations": {
+                "production": {
+                    "optimization": true,
+                    "extractLicenses": true,
+                    "inspect": false,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/view-history/src/environments/environment.ts",
+                            "with": "apps/view-history/src/environments/environment.prod.ts"
+                        }
+                    ]
+                }
+            }
+        },
+        "deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "commands": [
+                    "nx build view-history",
+                    "docker build -f ./apps/view-history/Dockerfile . -t $ECR_TAG:latest",
+                    "docker push $ECR_TAG:latest"
+                ],
+                "parallel": false
+            }
+        },
+        "serve": {
+            "executor": "@nrwl/js:node",
+            "options": {
+                "buildTarget": "view-history:build"
+            },
+            "configurations": {
+                "production": {
+                    "buildTarget": "view-history:build:production"
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/view-history/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/view-history/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}
