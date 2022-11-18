@@ -10,11 +10,8 @@
         "test": "nx test",
         "deploy": "nx deploy",
         "deploy:all": "nx run-many --all --target=deploy",
-        "compose:up": "nx compose:up",
-        "compose:upall": "nx run-many --all --target=compose:up && docker compose up db -d",
-        "compose:rm": "nx compose:rm",
-        "compose:rmall": "nx run-many --all --target=compose:rm && docker compose rm -sfv db",
-        "compose:down": "docker compose down -v && docker image prune -f"
+        "dev:up": "docker compose -f docker-compose.dev.yml up --build -d",
+        "dev:down": "docker compose -f docker-compose.dev.yml down -v && docker image prune -f"
     },
     "private": true,
     "dependencies": {

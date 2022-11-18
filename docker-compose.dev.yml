@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  db:
+    image: bitnami/mongodb:latest
+    container_name: db
+    ports:
+      - "4007:27017"
+    restart: always
+
+  video-streaming:
+    image: video-streaming:latest
+    build:
+      context: .
+      dockerfile: ./apps/video-streaming/Dockerfile.dev
+    container_name: video-streaming
+    volumes:
+      - /tmp/streamit/yarn-cache:/usr/local/share/.cache/yarn/v6:z
+      - ./apps/video-streaming:/usr/src/app/apps/video-streaming:z
+    ports:
+      - "4000:80"
+    env_file:
+      - ./apps/video-streaming/.env.docker
+    restart: "no"
+
+  aws-storage:
+    image: aws-storage:latest
+    build:
+      context: .
+      dockerfile: ./apps/aws-storage/Dockerfile.dev
+    container_name: video-storage
+    volumes:
+      - /tmp/streamit/yarn-cache:/usr/local/share/.cache/yarn/v6:z
+      - ./apps/aws-storage:/usr/src/app/apps/aws-storage:z
+    ports:
+      - "4001:80"
+    env_file:
+      - ./apps/aws-storage/.env.docker
+    restart: "no"
+
+  view-history:
+    image: view-history:latest
+    build:
+      context: .
+      dockerfile: ./apps/view-history/Dockerfile.dev
+    container_name: view-history
+    volumes:
+      - /tmp/streamit/yarn-cache:/usr/local/share/.cache/yarn/v6:z
+      - ./apps/view-history:/usr/src/app/apps/view-history:z
+    ports:
+      - "4002:80"
+    env_file:
+      - ./apps/view-history/.env.docker
+    restart: "no"
