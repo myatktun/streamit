@@ -2,6 +2,8 @@ FROM node:16.16.0-alpine
 
 WORKDIR /usr/src/app
 
-COPY ./package.json yarn.lock ./
+COPY ./package.json yarn.lock tsconfig.base.json ./
 
-RUN yarn install
+CMD yarn config set cache-min 9999999 && \
+yarn install && \
+yarn start video-streaming
