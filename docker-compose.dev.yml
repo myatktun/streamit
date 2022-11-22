@@ -4,7 +4,18 @@ services:
     image: bitnami/mongodb:latest
     container_name: db
     ports:
-      - "4007:27017"
+      - "4200:27017"
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
     restart: always
 
   video-streaming:
@@ -14,7 +25,7 @@ services:
       dockerfile: ./apps/video-streaming/Dockerfile.dev
     container_name: video-streaming
     volumes:
-      - /tmp/streamit/yarn-cache:/usr/local/share/.cache/yarn/v6:z
+      - ./node_modules:/usr/src/app/node_modules
       - ./apps/video-streaming:/usr/src/app/apps/video-streaming:z
     ports:
       - "4000:80"
@@ -29,7 +40,7 @@ services:
       dockerfile: ./apps/aws-storage/Dockerfile.dev
     container_name: video-storage
     volumes:
-      - /tmp/streamit/yarn-cache:/usr/local/share/.cache/yarn/v6:z
+      - ./node_modules:/usr/src/app/node_modules
       - ./apps/aws-storage:/usr/src/app/apps/aws-storage:z
     ports:
       - "4001:80"
@@ -44,7 +55,7 @@ services:
       dockerfile: ./apps/view-history/Dockerfile.dev
     container_name: view-history
     volumes:
-      - /tmp/streamit/yarn-cache:/usr/local/share/.cache/yarn/v6:z
+      - ./node_modules:/usr/src/app/node_modules
       - ./apps/view-history:/usr/src/app/apps/view-history:z
     ports:
       - "4002:80"

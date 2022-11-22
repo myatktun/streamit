@@ -26,6 +26,7 @@
             "files": ["*.ts", "*.tsx"],
             "extends": ["plugin:@nrwl/nx/typescript"],
             "rules": {
+                "@typescript-eslint/indent": ["error", 4],
                 "quotes": [
                     "error",
                     "double",
