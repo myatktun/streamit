@@ -1,9 +1,11 @@
 import express from "express"
 import { request } from "http"
-import { MongoClient, ObjectId } from "mongodb"
-import amqp from "amqplib"
+import { ObjectId } from "mongodb"
+import { connectDB, createMessageChannel, sendViewMessage } from "./helpers"
 
 const app = express()
+
+app.use(express.json())
 
 if (!process.env.VIDEO_STORAGE_HOST) {
     throw new Error("Environment variable VIDEO_STORAGE_HOST not specified")
@@ -13,56 +15,23 @@ if (!process.env.VIDEO_STORAGE_PORT) {
     throw new Error("Environment variable VIDEO_STORAGE_PORT not specified")
 }
 
-if (!process.env.DBHOST) {
-    throw new Error("Environment variable DBHOST not specified")
-}
-
-if (!process.env.DBNAME) {
-    throw new Error("Environment variable DBNAME not specified")
-}
-
 const VIDEO_STORAGE_HOST = process.env.VIDEO_STORAGE_HOST
 const VIDEO_STORAGE_PORT = process.env.VIDEO_STORAGE_PORT
-const DBHOST = process.env.DBHOST
-const DBNAME = process.env.DBNAME
 
 console.log(
     `Forwarding requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}`
 )
 
-const sendViewMessage = async (
-    messageChannel: amqp.Channel,
-    videoPath: string
-) => {
-    console.log("Publishing message on 'viewed' queue")
-    const msg = { videoPath: videoPath }
-    const jsonMsg = JSON.stringify(msg)
-    messageChannel.publish("", "viewed", Buffer.from(jsonMsg))
-}
-
-app.use(express.json())
-
-const connectDB = async () => {
-    const client = await MongoClient.connect(DBHOST)
-    const db = client.db(DBNAME)
-    return db.collection("videos")
-}
+const messageChannel = createMessageChannel()
+const dbCon = connectDB()
 
 app.get("/video", async (req, res) => {
-    console.log("Connecting to RabbitMQ server")
-
-    const messageConnection = await amqp.connect("amqp://rabbitmq")
-
-    console.log("Connected to RabbitMQ")
-
-    const messageChannel = await messageConnection.createChannel()
-
     if (typeof req.query.id !== "string") {
         res.status(404).send("Error, wrong id")
         return
     }
 
-    const videoCollection = await connectDB()
+    const videoCollection = (await dbCon).collection("videos")
     const videoId = new ObjectId(req.query.id)
     const videoRecord = await videoCollection.findOne({ _id: videoId })
     if (!videoRecord) {
@@ -89,7 +58,12 @@ app.get("/video", async (req, res) => {
         }
     )
     req.pipe(forwardRequest)
-    await sendViewMessage(messageChannel, videoRecord.videoPath)
+
+    const channel = await messageChannel
+    if (channel instanceof Error) {
+        throw channel
+    }
+    await sendViewMessage(channel, videoRecord.videoPath)
 })
 
 export default app
