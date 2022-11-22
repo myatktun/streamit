@@ -1,9 +1,21 @@
-import express from "express"
+// import express from "express"
+// import bodyParser from "body-parser"
 
-const app = express()
+// const app = express()
 
-app.get("/", (req, res) => {
-    res.send("hello from view history service")
-})
+// app.use(bodyParser.json())
 
-export default app
+// app.get("/history", async (req, res) => {
+//     if(typeof req.query.skip !== "string" || typeof req.query.limit !== "string"){
+//         return
+//     }
+//     const skip = parseInt(req.query.skip)
+//     const limit = parseInt(req.query.limit)
+//     const document = await videosCollection.find()
+//         .skip(skip)
+//         .limit(limit)
+//         .toArray()
+//     res.json({history: document})
+// })
+
+// export default app
