@@ -1,6 +1,7 @@
 import express from "express"
 import { request } from "http"
 import { MongoClient, ObjectId } from "mongodb"
+import amqp from "amqplib"
 
 const app = express()
 
@@ -29,6 +30,16 @@ console.log(
     `Forwarding requests to ${VIDEO_STORAGE_HOST}:${VIDEO_STORAGE_PORT}`
 )
 
+const sendViewMessage = async (
+    messageChannel: amqp.Channel,
+    videoPath: string
+) => {
+    console.log("Publishing message on 'viewed' queue")
+    const msg = { videoPath: videoPath }
+    const jsonMsg = JSON.stringify(msg)
+    messageChannel.publish("", "viewed", Buffer.from(jsonMsg))
+}
+
 app.use(express.json())
 
 const connectDB = async () => {
@@ -38,6 +49,14 @@ const connectDB = async () => {
 }
 
 app.get("/video", async (req, res) => {
+    console.log("Connecting to RabbitMQ server")
+
+    const messageConnection = await amqp.connect("amqp://rabbitmq")
+
+    console.log("Connected to RabbitMQ")
+
+    const messageChannel = await messageConnection.createChannel()
+
     if (typeof req.query.id !== "string") {
         res.status(404).send("Error, wrong id")
         return
@@ -70,6 +89,7 @@ app.get("/video", async (req, res) => {
         }
     )
     req.pipe(forwardRequest)
+    await sendViewMessage(messageChannel, videoRecord.videoPath)
 })
 
 export default app
