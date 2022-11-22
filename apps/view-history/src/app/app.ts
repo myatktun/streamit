@@ -6,18 +6,15 @@ const app = express()
 
 app.use(bodyParser.json())
 
-startMessageQueue()
+const db = connectDB()
+startMessageQueue(db)
 
 app.get("/history", async (req, res) => {
-    if (
-        typeof req.query.skip !== "string" ||
-        typeof req.query.limit !== "string"
-    ) {
-        return
-    }
-    const skip = parseInt(req.query.skip)
-    const limit = parseInt(req.query.limit)
-    const videosCollection = await connectDB()
+    const skip =
+        typeof req.query.skip !== "string" ? 0 : parseInt(req.query.skip)
+    const limit =
+        typeof req.query.limit !== "string" ? 0 : parseInt(req.query.limit)
+    const videosCollection = (await db).collection("videos")
     if (videosCollection instanceof Error) {
         console.log(videosCollection)
         res.status(400)

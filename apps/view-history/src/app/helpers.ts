@@ -1,5 +1,5 @@
 import amqp from "amqplib"
-import { MongoClient, Document } from "mongodb"
+import { MongoClient, Document, Db } from "mongodb"
 
 if (!process.env.DBHOST) {
     throw new Error("Environment variable DBHOST not specified")
@@ -9,13 +9,18 @@ if (!process.env.DBNAME) {
     throw new Error("Environment variable DBNAME not specified")
 }
 
+if (!process.env.RABBITMQ) {
+    throw new Error("Environment variable RABBITMQ not specified")
+}
+
 const DBHOST = process.env.DBHOST
 const DBNAME = process.env.DBNAME
+const RABBITMQ = process.env.RABBITMQ
 
 const connectRabbit = async () => {
     try {
-        console.log("Connecting to RabbitMQ server")
-        const messageConnection = await amqp.connect("amqp://rabbitmq")
+        console.log("Connecting to RabbitMQ")
+        const messageConnection = await amqp.connect(RABBITMQ)
         console.log("Connected to RabbitMQ")
         return messageConnection
     } catch (error) {
@@ -40,17 +45,15 @@ const consumeViewedMessage = async (
 }
 
 export const connectDB = async () => {
-    try {
-        const client = await MongoClient.connect(DBHOST)
-        const db = client.db(DBNAME)
-        return db.collection("videos")
-    } catch (error) {
-        return new Error(<string>error)
-    }
+    console.log("Connecting to Database")
+    const client = await MongoClient.connect(DBHOST)
+    const db = client.db(DBNAME)
+    console.log("Connected to Database")
+    return db
 }
 
-export const startMessageQueue = async () => {
-    const videosCollection = await connectDB()
+export const startMessageQueue = async (dbCon: Promise<Db>) => {
+    const videosCollection = (await dbCon).collection("videos")
     const messageConnection = await connectRabbit()
 
     if (messageConnection instanceof Error) {
