@@ -4,6 +4,5 @@ WORKDIR /usr/src/app
 
 COPY ./package.json yarn.lock tsconfig.base.json ./
 
-CMD yarn config set cache-min 9999999 && \
-yarn install && \
-yarn start aws-storage
+CMD yarn install && \
+    yarn start aws-storage
