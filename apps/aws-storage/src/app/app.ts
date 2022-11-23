@@ -32,6 +32,8 @@ const getObject = async (params: GetObjectCommandInput) => {
     }
 }
 
+app.use(express.json())
+
 app.get("/video", async (req, res) => {
     if (typeof req.query.path !== "string") {
         res.status(404).send("Error")
