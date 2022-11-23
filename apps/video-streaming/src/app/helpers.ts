@@ -26,6 +26,7 @@ export const createMessageChannel = async () => {
             throw messageConnection
         }
         const messageChannel = await messageConnection.createChannel()
+        await messageChannel.assertExchange("viewed", "fanout")
         return messageChannel
     } catch (error) {
         return new Error(<string>error)
@@ -47,5 +48,5 @@ export const sendViewMessage = async (
     console.log("Publishing message on 'viewed' queue")
     const msg = { videoPath: videoPath }
     const jsonMsg = JSON.stringify(msg)
-    messageChannel.publish("", "viewed", Buffer.from(jsonMsg))
+    messageChannel.publish("viewed", "", Buffer.from(jsonMsg))
 }

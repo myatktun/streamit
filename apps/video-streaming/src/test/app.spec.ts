@@ -7,5 +7,4 @@ describe("test", () => {
         expect(res.statusCode).toBe(200)
         expect(res.headers["content-type"]).toBe("video/mp4")
     })
-
 })
