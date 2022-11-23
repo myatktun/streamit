@@ -4,6 +4,6 @@ WORKDIR /usr/src/app
 
 COPY ./package.json yarn.lock tsconfig.base.json ./
 
-CMD yarn config set cache-min 9999999 && \
-yarn install && \
-yarn start video-streaming
+CMD yarn install && \
+    yarn wait-port rabbitmq:5672 && \
+    yarn start video-streaming
