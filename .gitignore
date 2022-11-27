@@ -39,3 +39,8 @@ testem.log
 Thumbs.db
 
 .env*
+
+# terraform
+.terraform/
+*.tfstate
+*.backup
