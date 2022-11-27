@@ -1,5 +1,5 @@
 resource "aws_resourcegroups_group" "streamit_resourcegp" {
-  name        = "streamit"
+  name        = var.project_name
   description = "Resources for streamit dev environment"
   resource_query {
     query = <<JSON
@@ -11,7 +11,7 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
         "TagFilters": [
             {
                 "Key": "Project",
-                "Values": ["streamit"]
+                "Values": ["${var.project_name}"]
             },
             {
                 "Key": "Environment",
@@ -19,15 +19,12 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
             },
             {
                 "Key": "Type",
-                "Values": ["web-app"]
+                "Values": ["${var.project_type}"]
             }
         ]
     }
     JSON
   }
 
-  tags = {
-    Name        = "streamit"
-    Environment = "dev"
-  }
+  tags = var.default_tags
 }

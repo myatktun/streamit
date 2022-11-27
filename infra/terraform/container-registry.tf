@@ -5,12 +5,12 @@ resource "aws_ecr_repository" "streamit_aws-storage" {
     scan_on_push = true
   }
 
-  tags = {
-    Project     = "streamit"
-    Environment = "dev"
-    Type        = "web-app"
-    Name        = "aws-storage"
-  }
+  tags = merge(
+    var.default_tags,
+    {
+      Name = "aws-storage"
+    }
+  )
 }
 
 resource "aws_ecr_repository" "streamit_video-streaming" {
@@ -20,12 +20,12 @@ resource "aws_ecr_repository" "streamit_video-streaming" {
     scan_on_push = true
   }
 
-  tags = {
-    Project     = "streamit"
-    Environment = "dev"
-    Type        = "web-app"
-    Name        = "video-streaming"
-  }
+  tags = merge(
+    var.default_tags,
+    {
+      Name = "video-streaming"
+    }
+  )
 }
 
 resource "aws_ecr_repository" "streamit_view-history" {
@@ -35,10 +35,10 @@ resource "aws_ecr_repository" "streamit_view-history" {
     scan_on_push = true
   }
 
-  tags = {
-    Project     = "streamit"
-    Environment = "dev"
-    Type        = "web-app"
-    Name        = "view-history"
-  }
+  tags = merge(
+    var.default_tags,
+    {
+      Name = "view-history"
+    }
+  )
 }
