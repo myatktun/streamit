@@ -12,7 +12,8 @@
         "deploy:all": "nx run-many --all --target=deploy",
         "dev:up": "docker compose -f docker-compose.dev.yml up --build -d",
         "dev:down": "docker compose -f docker-compose.dev.yml down -v && docker image prune -f",
-        "dev:restart": "docker compose -f docker-compose.dev.yml restart"
+        "dev:restart": "docker compose -f docker-compose.dev.yml restart",
+        "tf": "terraform -chdir=./infra"
     },
     "private": true,
     "dependencies": {
