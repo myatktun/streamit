@@ -5,6 +5,8 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
     query = <<JSON
     {
         "ResourceTypeFilters": [
+            "AWS::EC2::VPC",
+            "AWS::EC2::Subnet",
             "AWS::EC2::Instance",
             "AWS::ECR::Repository"
         ],
