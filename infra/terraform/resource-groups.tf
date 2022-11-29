@@ -7,6 +7,9 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
         "ResourceTypeFilters": [
             "AWS::EC2::VPC",
             "AWS::EC2::Subnet",
+            "AWS::EC2::InternetGateway",
+            "AWS::EC2::EIP",
+            "AWS::EC2::NatGateway",
             "AWS::EC2::Instance",
             "AWS::ECR::Repository"
         ],

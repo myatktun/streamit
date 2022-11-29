@@ -1,4 +1,4 @@
-resource "aws_vpc" "eks_vpc" {
+resource "aws_vpc" "streamit_vpc" {
   cidr_block                       = "10.0.0.0/18"
   instance_tenancy                 = "default"
   enable_dns_support               = true
