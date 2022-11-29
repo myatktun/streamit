@@ -4,7 +4,7 @@ resource "aws_internet_gateway" "streamit_igw" {
   tags = merge(
     var.default_tags,
     {
-      Name = "streamit-igw"
+      Name = "${var.project_name}-igw"
     }
   )
 }

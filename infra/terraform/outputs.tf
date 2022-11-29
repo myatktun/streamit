@@ -15,3 +15,13 @@ output "vpc_id" {
   description = "streamit VPC ID"
   sensitive   = false
 }
+
+output "region" {
+  value       = var.region
+  description = "AWS Region"
+}
+
+output "cluster_name" {
+  description = "EKS Cluster Name"
+  value       = aws_eks_cluster.streamit_cluster.name
+}

@@ -5,7 +5,7 @@ resource "aws_nat_gateway" "streamit_nat1" {
   tags = merge(
     var.default_tags,
     {
-      Name = "streamit-NAT-1"
+      Name = "${var.project_name}-NAT-1"
     }
   )
 }
@@ -17,7 +17,7 @@ resource "aws_nat_gateway" "streamit_nat2" {
   tags = merge(
     var.default_tags,
     {
-      Name = "streamit-NAT-2"
+      Name = "${var.project_name}-NAT-2"
     }
   )
 }

@@ -5,13 +5,7 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
     query = <<JSON
     {
         "ResourceTypeFilters": [
-            "AWS::EC2::VPC",
-            "AWS::EC2::Subnet",
-            "AWS::EC2::InternetGateway",
-            "AWS::EC2::EIP",
-            "AWS::EC2::NatGateway",
-            "AWS::EC2::Instance",
-            "AWS::ECR::Repository"
+            "AWS::AllSupported"
         ],
         "TagFilters": [
             {
@@ -31,5 +25,9 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
     JSON
   }
 
-  tags = var.default_tags
+  tags = merge(
+    var.default_tags,
+    {
+      Name = "${var.project_name}-resourcegp"
+  })
 }

@@ -4,7 +4,7 @@ resource "aws_eip" "streamit_nat1" {
   tags = merge(
     var.default_tags,
     {
-      Name = "streamit-EIP-1"
+      Name = "${var.project_name}-EIP-1"
     }
   )
 }
@@ -15,7 +15,7 @@ resource "aws_eip" "streamit_nat2" {
   tags = merge(
     var.default_tags,
     {
-      Name = "streamit-EIP-2"
+      Name = "${var.project_name}-EIP-2"
     }
   )
 }
