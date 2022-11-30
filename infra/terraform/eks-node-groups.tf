@@ -13,12 +13,9 @@ resource "aws_iam_role" "streamit_nodes" {
     ]
   })
 
-  tags = merge(
-    var.default_tags,
-    {
-      Name = "${var.project_name}-nodes"
-    }
-  )
+  tags = {
+    Name = "${var.project_name}-nodes"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
@@ -70,10 +67,7 @@ resource "aws_eks_node_group" "streamit_node_group" {
     aws_iam_role_policy_attachment.ec2_container_registry_read_only_policy
   ]
 
-  tags = merge(
-    var.default_tags,
-    {
-      Name = "${var.project_name}-node-group"
-    }
-  )
+  tags = {
+    Name = "${var.project_name}-node-group"
+  }
 }

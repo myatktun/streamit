@@ -25,9 +25,7 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
     JSON
   }
 
-  tags = merge(
-    var.default_tags,
-    {
-      Name = "${var.project_name}-resourcegp"
-  })
+  tags = {
+    Name = "${var.project_name}-resourcegp"
+  }
 }

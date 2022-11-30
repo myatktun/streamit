@@ -43,4 +43,5 @@ Thumbs.db
 # terraform
 .terraform/
 *.tfstate
+*.tfstate.lock.info
 *.backup

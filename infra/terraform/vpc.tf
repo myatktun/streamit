@@ -5,10 +5,7 @@ resource "aws_vpc" "streamit_vpc" {
   enable_dns_hostnames             = true
   assign_generated_ipv6_cidr_block = false
 
-  tags = merge(
-    var.default_tags,
-    {
-      Name = "${var.project_name}-vpc"
-    }
-  )
+  tags = {
+    Name = "${var.project_name}-vpc"
+  }
 }

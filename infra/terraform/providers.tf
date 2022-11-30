@@ -9,4 +9,11 @@ terraform {
 
 provider "aws" {
   region = var.region
+  default_tags {
+    tags = {
+      Project     = "streamit"
+      Environment = "dev"
+      Type        = "web-app"
+    }
+  }
 }

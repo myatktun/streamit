@@ -13,12 +13,9 @@ resource "aws_iam_role" "streamit_cluster" {
     ]
   })
 
-  tags = merge(
-    var.default_tags,
-    {
-      Name = "${var.eks_cluster}-role"
-    }
-  )
+  tags = {
+    Name = "${var.eks_cluster}-role"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
@@ -46,10 +43,7 @@ resource "aws_eks_cluster" "streamit_cluster" {
     aws_iam_role_policy_attachment.eks_cluster_policy
   ]
 
-  tags = merge(
-    var.default_tags,
-    {
-      Name = var.eks_cluster
-    }
-  )
+  tags = {
+    Name = var.eks_cluster
+  }
 }
