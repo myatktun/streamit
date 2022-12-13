@@ -26,3 +26,15 @@ variable "eks_cluster" {
   type    = string
   default = "streamit-cluster"
 }
+
+variable "public_subnet_cidr_blocks" {
+  description = "Available cidr blocks for public subnets"
+  type        = list(string)
+  default     = ["10.0.0.0/20", "10.0.16.0/20"]
+}
+
+variable "private_subnet_cidr_blocks" {
+  description = "Available cidr blocks for private subnets"
+  type        = list(string)
+  default     = ["10.0.32.0/20", "10.0.48.0/20"]
+}

@@ -11,7 +11,7 @@ output "view-history_repository_url" {
 }
 
 output "vpc_id" {
-  value       = aws_vpc.streamit_vpc.id
+  value       = module.vpc.vpc_id
   description = "streamit VPC ID"
   sensitive   = false
 }
@@ -23,5 +23,11 @@ output "region" {
 
 output "cluster_name" {
   description = "EKS Cluster Name"
-  value       = aws_eks_cluster.streamit_cluster.name
+  value       = module.eks.cluster_name
+}
+
+output "cluster_endpoint" {
+  description = "EKS Cluster Endpoint"
+  value       = module.eks.cluster_endpoint
+  sensitive   = true
 }
