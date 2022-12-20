@@ -45,3 +45,4 @@ Thumbs.db
 *.tfstate
 *.tfstate.lock.info
 *.backup
+*.tfvars

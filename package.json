@@ -13,7 +13,8 @@
         "dev:up": "docker compose -f docker-compose.dev.yml up --build -d",
         "dev:down": "docker compose -f docker-compose.dev.yml down -v && docker image prune -f",
         "dev:restart": "docker compose -f docker-compose.dev.yml restart",
-        "tf": "terraform -chdir=./infra/terraform/aws"
+        "tf:dev": "terraform -chdir=./infra/dev",
+        "tf:prod": "terraform -chdir=./infra/prod"
     },
     "private": true,
     "dependencies": {
