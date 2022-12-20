@@ -30,13 +30,12 @@
                 }
             }
         },
-        "deploy": {
+        "image": {
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
                     "nx build aws-storage",
-                    "docker build -f ./apps/aws-storage/Dockerfile . -t $ECR_TAG:latest",
-                    "docker push $ECR_TAG:latest"
+                    "docker build -f ./apps/aws-storage/Dockerfile.prod . -t $ECR_TAG:latest"
                 ],
                 "parallel": false
             }
