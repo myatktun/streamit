@@ -30,13 +30,12 @@
                 }
             }
         },
-        "deploy": {
+        "image": {
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
                     "nx build view-history",
-                    "docker build -f ./apps/view-history/Dockerfile . -t $ECR_TAG:latest",
-                    "docker push $ECR_TAG:latest"
+                    "docker build -f ./apps/view-history/Dockerfile.prod . -t $ECR_TAG:latest"
                 ],
                 "parallel": false
             }
