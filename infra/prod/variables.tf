@@ -38,3 +38,12 @@ variable "private_subnet_cidr_blocks" {
   type        = list(string)
   default     = ["10.0.32.0/20", "10.0.48.0/20"]
 }
+
+variable "app_version" {
+  type    = number
+  default = 1.0
+}
+
+variable "ecr_login" {
+  type = string
+}

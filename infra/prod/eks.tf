@@ -16,6 +16,7 @@ module "eks" {
     ami_type                              = "AL2_x86_64"
     attach_cluster_primary_security_group = true
     create_security_group                 = false
+    vpc_security_group_ids                = [aws_security_group.node_group.id]
   }
 
   eks_managed_node_groups = {
@@ -26,9 +27,12 @@ module "eks" {
       min_size       = 1
       max_size       = 1
       desired_size   = 1
-
-      vpc_security_group_ids = [aws_security_group.node_group.id]
+      capacity_type  = "ON_DEMAND"
     }
+  }
+
+  node_security_group_tags = {
+    "kubernetes.io/cluster/${var.eks_cluster}" = null
   }
 
   tags = {

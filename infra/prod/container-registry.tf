@@ -5,6 +5,8 @@ resource "aws_ecr_repository" "streamit_aws-storage" {
     scan_on_push = true
   }
 
+  force_delete = true
+
   tags = {
     Name = "aws-storage"
   }
@@ -17,6 +19,8 @@ resource "aws_ecr_repository" "streamit_video-streaming" {
     scan_on_push = true
   }
 
+  force_delete = true
+
   tags = {
     Name = "video-streaming"
   }
@@ -28,6 +32,8 @@ resource "aws_ecr_repository" "streamit_view-history" {
   image_scanning_configuration {
     scan_on_push = true
   }
+
+  force_delete = true
 
   tags = {
     Name = "view-history"
