@@ -24,11 +24,12 @@ provider "aws" {
       Project     = "streamit"
       Environment = "dev"
       Type        = "web-app"
+      Cluster     = "minikube"
     }
   }
 }
 
 provider "kubernetes" {
   config_path    = "~/.kube/config"
-  config_context = "minikube"
+  config_context = "streamit"
 }
