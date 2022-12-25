@@ -1,20 +1,9 @@
 locals {
-  service_name = "video-streaming"
-  image_tag    = "${aws_ecr_repository.streamit_video-streaming.repository_url}:${var.app_version}"
-  dockercreds = {
-    auths = {
-      "${var.ecr_login}" = {
-        auth = data.aws_ecr_authorization_token.name.authorization_token
-      }
-    }
-  }
+  service_name_video_streaming = "video-streaming"
+  image_tag_video_streaming    = "${aws_ecr_repository.streamit_video-streaming.repository_url}:${var.app_version}"
 }
 
-resource "null_resource" "docker_build" {
-  depends_on = [
-    aws_ecr_repository.streamit_video-streaming
-  ]
-
+resource "null_resource" "docker_build_video_streaming" {
   triggers = {
     always_run = timestamp()
   }
@@ -22,14 +11,16 @@ resource "null_resource" "docker_build" {
   provisioner "local-exec" {
     command = <<-EOT
     yarn build video-streaming
-    docker build -t ${local.image_tag} -f ../../apps/${local.service_name}/Dockerfile.prod ../../.
+    docker build -t ${local.image_tag_video_streaming} -f ../../apps/${local.service_name_video_streaming}/Dockerfile.prod ../../.
     EOT
   }
 }
 
-resource "null_resource" "docker_login" {
+resource "null_resource" "docker_push_video_streaming" {
   depends_on = [
-    null_resource.docker_build
+    aws_ecr_repository.streamit_video-streaming,
+    null_resource.docker_login,
+    null_resource.docker_build_video_streaming
   ]
 
   triggers = {
@@ -37,34 +28,8 @@ resource "null_resource" "docker_login" {
   }
 
   provisioner "local-exec" {
-    command = "aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${var.ecr_login}"
+    command = "docker push ${local.image_tag_video_streaming}"
   }
-}
-
-resource "null_resource" "docker_push" {
-  depends_on = [
-    null_resource.docker_login
-  ]
-
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "docker push ${local.image_tag}"
-  }
-}
-
-resource "kubernetes_secret" "docker_credentials" {
-  metadata {
-    name = "docker-credentials"
-  }
-
-  data = {
-    ".dockerconfigjson" = jsonencode(local.dockercreds)
-  }
-
-  type = "kubernetes.io/dockerconfigjson"
 }
 
 resource "kubernetes_config_map" "video-streaming" {
@@ -84,13 +49,13 @@ resource "kubernetes_config_map" "video-streaming" {
 
 resource "kubernetes_deployment" "video-streaming" {
   depends_on = [
-    null_resource.docker_push
+    null_resource.docker_push_video_streaming
   ]
 
   metadata {
-    name = local.service_name
+    name = local.service_name_video_streaming
     labels = {
-      pod = local.service_name
+      pod = local.service_name_video_streaming
     }
   }
 
@@ -98,24 +63,20 @@ resource "kubernetes_deployment" "video-streaming" {
     replicas = 1
     selector {
       match_labels = {
-        pod = local.service_name
+        pod = local.service_name_video_streaming
       }
     }
 
     template {
       metadata {
         labels = {
-          pod = local.service_name
+          pod = local.service_name_video_streaming
         }
       }
       spec {
         container {
-          name  = local.service_name
-          image = local.image_tag
-          env {
-            name  = "PORT"
-            value = "80"
-          }
+          name  = local.service_name_video_streaming
+          image = local.image_tag_video_streaming
           env_from {
             config_map_ref {
               name = "video-streaming-config"
@@ -132,7 +93,7 @@ resource "kubernetes_deployment" "video-streaming" {
 
 resource "kubernetes_service" "video-streaming" {
   metadata {
-    name = local.service_name
+    name = local.service_name_video_streaming
   }
 
   spec {
