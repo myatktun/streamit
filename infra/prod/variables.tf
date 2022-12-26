@@ -16,7 +16,7 @@ variable "project_type" {
 variable "default_tags" {
   default = {
     Project     = "streamit"
-    Environment = "dev"
+    Environment = "prod"
     Type        = "web-app"
   }
   type = map(string)
@@ -45,5 +45,13 @@ variable "app_version" {
 }
 
 variable "ecr_login" {
+  type = string
+}
+
+variable "aws_access_key_id" {
+  type = string
+}
+
+variable "aws_secret_access_key" {
   type = string
 }

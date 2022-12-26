@@ -1,6 +1,6 @@
 resource "aws_resourcegroups_group" "streamit_resourcegp" {
   name        = var.project_name
-  description = "Resources for streamit dev environment"
+  description = "Resources for streamit prod environment"
   resource_query {
     query = <<JSON
     {
@@ -14,7 +14,7 @@ resource "aws_resourcegroups_group" "streamit_resourcegp" {
             },
             {
                 "Key": "Environment",
-                "Values": ["dev"]
+                "Values": ["prod"]
             },
             {
                 "Key": "Type",

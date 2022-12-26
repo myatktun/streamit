@@ -32,7 +32,7 @@ provider "aws" {
   default_tags {
     tags = {
       Project     = "streamit"
-      Environment = "dev"
+      Environment = "prod"
       Type        = "web-app"
     }
   }

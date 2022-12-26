@@ -1,8 +1,8 @@
-resource "kubernetes_deployment" "rabbit" {
+resource "kubernetes_deployment" "rabbitmq" {
   metadata {
-    name = "rabbit"
+    name = "rabbitmq"
     labels = {
-      pod = "rabbit"
+      pod = "rabbitmq"
     }
   }
 
@@ -11,21 +11,21 @@ resource "kubernetes_deployment" "rabbit" {
 
     selector {
       match_labels = {
-        pod = "rabbit"
+        pod = "rabbitmq"
       }
     }
 
     template {
       metadata {
         labels = {
-          pod = "rabbit"
+          pod = "rabbitmq"
         }
       }
 
       spec {
         container {
           image = "rabbitmq:3.11-management"
-          name  = "rabbit"
+          name  = "rabbitmq"
           port {
             container_port = 5672
           }
@@ -35,14 +35,14 @@ resource "kubernetes_deployment" "rabbit" {
   }
 }
 
-resource "kubernetes_service" "rabbit" {
+resource "kubernetes_service" "rabbitmq" {
   metadata {
-    name = "rabbit"
+    name = "rabbitmq"
   }
 
   spec {
     selector = {
-      pod = kubernetes_deployment.rabbit.metadata[0].labels.pod
+      pod = kubernetes_deployment.rabbitmq.metadata[0].labels.pod
     }
 
     port {
@@ -53,12 +53,12 @@ resource "kubernetes_service" "rabbit" {
 
 /* resource "kubernetes_service" "rabbit_dashboard" { */
 /*   metadata { */
-/*     name = "rabbit-dashboard" */
+/*     name = "rabbitmq-dashboard" */
 /*   } */
 
 /*   spec { */
 /*     selector = { */
-/*       pod = kubernetes_deployment.rabbit.metadata[0].labels.pod */
+/*       pod = kubernetes_deployment.rabbitmq.metadata[0].labels.pod */
 /*     } */
 
 /*     port { */
