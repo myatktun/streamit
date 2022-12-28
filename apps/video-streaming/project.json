@@ -34,8 +34,7 @@
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
-                    "nx build video-streaming",
-                    "docker build -f ./apps/video-streaming/Dockerfile.prod . -t $ECR_TAG:latest"
+                    "docker build -f ./apps/video-streaming/Dockerfile.prod . -t $ECR_TAG/video-streaming:latest"
                 ],
                 "parallel": false
             }
