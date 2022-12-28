@@ -26,12 +26,7 @@ jobs:
     - name: Build Projects
       run: yarn build:all
 
-  deploy:
-    needs: build
-
-    runs-on: ubuntu-latest
-    env:
-      ECR_TAG: ${{secrets.ECR_TAG}}
-    steps:
     - name: Build images
+      env:
+        ECR_TAG: ${{secrets.ECR_TAG}}
       run: yarn deploy:all
