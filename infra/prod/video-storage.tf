@@ -3,35 +3,6 @@ locals {
   image_tag_video_storage    = "${aws_ecr_repository.streamit_aws-storage.repository_url}:${var.app_version}"
 }
 
-resource "null_resource" "docker_build_aws_storage" {
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-    yarn build video-storage
-    docker build -t ${local.image_tag_video_storage} -f ../../apps/aws-storage/Dockerfile.prod ../../.
-    EOT
-  }
-}
-
-resource "null_resource" "docker_push_aws_storage" {
-  depends_on = [
-    aws_ecr_repository.streamit_aws-storage,
-    null_resource.docker_login,
-    null_resource.docker_build_aws_storage
-  ]
-
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "docker push ${local.image_tag_video_storage}"
-  }
-}
-
 resource "kubernetes_config_map" "video-storage" {
   metadata {
     name = "video-storage-config"
@@ -47,10 +18,6 @@ resource "kubernetes_config_map" "video-storage" {
 }
 
 resource "kubernetes_deployment" "video-storage" {
-  depends_on = [
-    null_resource.docker_push_aws_storage
-  ]
-
   metadata {
     name = local.service_name_video_storage
     labels = {

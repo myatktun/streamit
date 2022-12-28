@@ -3,35 +3,6 @@ locals {
   image_tag_view_history    = "${aws_ecr_repository.streamit_view-history.repository_url}:${var.app_version}"
 }
 
-resource "null_resource" "docker_build_view_history" {
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-    yarn build view-history
-    docker build -t ${local.image_tag_view_history} -f ../../apps/${local.service_name_view_history}/Dockerfile.prod ../../.
-    EOT
-  }
-}
-
-resource "null_resource" "docker_push_view_history" {
-  depends_on = [
-    aws_ecr_repository.streamit_view-history,
-    null_resource.docker_login,
-    null_resource.docker_build_view_history
-  ]
-
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "docker push ${local.image_tag_view_history}"
-  }
-}
-
 resource "kubernetes_config_map" "view-history" {
   metadata {
     name = "view-history-config"
@@ -46,10 +17,6 @@ resource "kubernetes_config_map" "view-history" {
 }
 
 resource "kubernetes_deployment" "view-history" {
-  depends_on = [
-    null_resource.docker_push_view_history
-  ]
-
   metadata {
     name = local.service_name_view_history
     labels = {

@@ -3,35 +3,6 @@ locals {
   image_tag_video_streaming    = "${aws_ecr_repository.streamit_video-streaming.repository_url}:${var.app_version}"
 }
 
-resource "null_resource" "docker_build_video_streaming" {
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-    yarn build video-streaming
-    docker build -t ${local.image_tag_video_streaming} -f ../../apps/${local.service_name_video_streaming}/Dockerfile.prod ../../.
-    EOT
-  }
-}
-
-resource "null_resource" "docker_push_video_streaming" {
-  depends_on = [
-    aws_ecr_repository.streamit_video-streaming,
-    null_resource.docker_login,
-    null_resource.docker_build_video_streaming
-  ]
-
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "docker push ${local.image_tag_video_streaming}"
-  }
-}
-
 resource "kubernetes_config_map" "video-streaming" {
   metadata {
     name = "video-streaming-config"
@@ -48,10 +19,6 @@ resource "kubernetes_config_map" "video-streaming" {
 }
 
 resource "kubernetes_deployment" "video-streaming" {
-  depends_on = [
-    null_resource.docker_push_video_streaming
-  ]
-
   metadata {
     name = local.service_name_video_streaming
     labels = {
