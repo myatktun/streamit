@@ -34,8 +34,7 @@
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
-                    "nx build view-history",
-                    "docker build -f ./apps/view-history/Dockerfile.prod . -t $ECR_TAG:latest"
+                    "docker build -f ./apps/view-history/Dockerfile.prod . -t $ECR_TAG/view-history:latest"
                 ],
                 "parallel": false
             }
