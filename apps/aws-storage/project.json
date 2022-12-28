@@ -34,8 +34,7 @@
             "executor": "nx:run-commands",
             "options": {
                 "commands": [
-                    "nx build aws-storage",
-                    "docker build -f ./apps/aws-storage/Dockerfile.prod . -t $ECR_TAG:latest"
+                    "docker build -f ./apps/aws-storage/Dockerfile.prod . -t $ECR_TAG/aws-storage:latest"
                 ],
                 "parallel": false
             }
