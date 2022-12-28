@@ -1,9 +1,9 @@
-resource "kubernetes_deployment" "database" {
+resource "kubernetes_deployment" "db" {
   metadata {
-    name = "database"
+    name = "db"
 
     labels = {
-      pod = "database"
+      pod = "db"
     }
   }
 
@@ -12,21 +12,21 @@ resource "kubernetes_deployment" "database" {
 
     selector {
       match_labels = {
-        pod = "database"
+        pod = "db"
       }
     }
 
     template {
       metadata {
         labels = {
-          pod = "database"
+          pod = "db"
         }
       }
 
       spec {
         container {
-          image = "bitnami/mongodb"
-          name  = "database"
+          image = "mongo:latest"
+          name  = "db"
           port {
             container_port = 27017
           }
@@ -36,14 +36,14 @@ resource "kubernetes_deployment" "database" {
   }
 }
 
-resource "kubernetes_service" "database" {
+resource "kubernetes_service" "db" {
   metadata {
-    name = "database"
+    name = "db"
   }
 
   spec {
     selector = {
-      pod = kubernetes_deployment.database.metadata[0].labels.pod
+      pod = kubernetes_deployment.db.metadata[0].labels.pod
     }
 
     port {
