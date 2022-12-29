@@ -1,6 +1,11 @@
-name: Node.js CI
+name: CI
 
 on:
+  workflow_run:
+    workflows: ["Setup Infrastructure"]
+    branches: [ "main" ]
+    types:
+      - completed
   push:
     branches: [ "main" ]
   pull_request:
@@ -13,8 +18,10 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-    - name: Install Node.js
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: "16.16.0"
@@ -37,7 +44,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and Push Images
+    - name: Build and Push Docker Images
       env:
         ECR_TAG: ${{secrets.ECR_TAG}}
       run: yarn deploy:all
