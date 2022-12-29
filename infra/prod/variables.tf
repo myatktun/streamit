@@ -43,7 +43,3 @@ variable "app_version" {
   type    = number
   default = 1.0
 }
-
-variable "ecr_tag" {
-  type = string
-}
