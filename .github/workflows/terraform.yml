@@ -44,7 +44,7 @@ jobs:
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
-      run: terraform -chidr=./infra/prod apply -auto-approve -input=false
+      run: terraform -chdir=./infra/prod apply -auto-approve -input=false
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
