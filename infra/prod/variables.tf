@@ -44,14 +44,6 @@ variable "app_version" {
   default = 1.0
 }
 
-variable "ecr_login" {
-  type = string
-}
-
-variable "aws_access_key_id" {
-  type = string
-}
-
-variable "aws_secret_access_key" {
+variable "ecr_tag" {
   type = string
 }
